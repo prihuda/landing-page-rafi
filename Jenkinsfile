@@ -21,10 +21,24 @@ pipeline {
                  sh "docker push $DOCKER_REGISTRY/$DOCKER_IMAGE:4"
              }
          }
+
+           stage('Clone Source Code') {
+            steps {
+                sh '''
+                if [ -d big-project ]
+                then
+                    ls
+                else 
+                    git clone https://github.com/prihuda/big-project.git
+                fi
+                '''
+            }
+        }
+
          stage('Deploy Image to Kubernetes') { 
              steps {
-                 sh "git clone https://github.com/prihuda/big-project.git"
                  sh """ sed -i 's;prihuda22/sosial-media-bp ;prihuda22/sosial-media-bp:4;g' ./big-project/landing-page/deployment-landing-prod.yaml """
+                 sh "kubectl apply -f ./big-project/prod.json"
     	         sh "kubectl apply -f ./big-project/landing-page/deployment-landing-prod.yaml"
                  sh "chmod +x ./big-project/landing-page/prod-landing-service.sh"
                  sh "sh ./big-project/landing-page/prod-landing-service.sh"

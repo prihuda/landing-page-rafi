@@ -11,6 +11,20 @@ pipeline {
                 sh "whoami"
             }
         }
+
+        stage('Clone Source Code') {
+            steps {
+                sh '''
+                if [ -d big-project ]
+                then
+                    cd big-project && git pull
+                else 
+                    git clone https://github.com/prihuda/big-project.git
+                fi
+                '''
+            }
+        }
+
         stage('Docker Build Image') { 
              steps {
                  sh "docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE:${BUILD_NUMBER} ."

@@ -36,19 +36,6 @@ pipeline {
              }
          }
 
-           stage('Clone Source Code') {
-            steps {
-                sh '''
-                if [ -d big-project ]
-                then
-                    ls
-                else 
-                    git clone https://github.com/prihuda/big-project.git
-                fi
-                '''
-            }
-        }
-
          stage('Deploy Image to Kubernetes') { 
              steps {
                  sh """ sed -i 's;prihuda22/landingpage-sp3:v1 ;prihuda22/sosial-media-bp:${BUILD_NUMBER};g' ./big-project/landing-page/deployment-landing-prod.yaml """

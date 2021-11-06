@@ -17,7 +17,7 @@ pipeline {
                 sh '''
                 if [ -d big-project ]
                 then
-                    cd big-project && git pull
+                    cd big-project && git pull origin stagging
                 else 
                     git clone https://github.com/prihuda/big-project.git
                 fi

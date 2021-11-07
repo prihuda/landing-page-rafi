@@ -1,5 +1,5 @@
 env.DOCKER_REGISTRY = 'prihuda22'
-env.DOCKER_IMAGE = 'sosial-media-bp'
+env.DOCKER_IMAGE = 'landing-page-bp'
 
 
 pipeline {
@@ -17,7 +17,7 @@ pipeline {
                 sh '''
                 if [ -d big-project ]
                 then
-                    cd big-project && git pull origin stagging
+                    ls
                 else 
                     git clone https://github.com/prihuda/big-project.git
                 fi
@@ -38,12 +38,9 @@ pipeline {
 
          stage('Deploy Image to Kubernetes') { 
              steps {
-                 sh """ sed -i 's;prihuda22/landingpage-sp3:v1 ;prihuda22/sosial-media-bp:${BUILD_NUMBER};g' ./big-project/landing-page/deployment-landing-prod.yaml """
+                 sh """ sed -i 's;prihuda22/landingpage-sp3:v1;$DOCKER_REGISTRY/$DOCKER_IMAGE:${BUILD_NUMBER};g' ./big-project/landing-page/deployment-landing-prod.yaml """
                  sh "kubectl apply -f ./big-project/prod.json"
     	         sh "kubectl apply -f ./big-project/landing-page/deployment-landing-prod.yaml"
-                 sh "chmod +x ./big-project/landing-page/prod-landing-service.sh"
-                 sh "kubectl delete svc/landing-page -n production"
-                 sh "sh ./big-project/landing-page/prod-landing-service.sh"
                  sh "kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.4/deploy/static/provider/aws/deploy.yaml"
                  sh "kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission"
                  sh "kubectl apply -f ./big-project/ingress/ingress.yaml"

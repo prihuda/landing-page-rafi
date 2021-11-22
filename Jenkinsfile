@@ -41,7 +41,6 @@ pipeline {
                  sh """ sed -i 's;prihuda22/landingpage-sp3:v1;$DOCKER_REGISTRY/$DOCKER_IMAGE:${BUILD_NUMBER};g' ./big-project/landing-page/deployment-landing-prod.yaml """
                  sh "kubectl apply -f ./big-project/prod.json"
     	         sh "kubectl apply -f ./big-project/landing-page/deployment-landing-prod.yaml"
-                 sh "kubectl apply -f ./big-project/ingress/ingress.yaml"
              }
          }
 

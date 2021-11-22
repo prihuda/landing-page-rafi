@@ -41,9 +41,6 @@ pipeline {
                  sh """ sed -i 's;prihuda22/landingpage-sp3:v1;$DOCKER_REGISTRY/$DOCKER_IMAGE:${BUILD_NUMBER};g' ./big-project/landing-page-staging/deployment-landing-prod.yaml """
                  sh "kubectl apply -f ./big-project/staging.json"
     	         sh "kubectl apply -f ./big-project/landing-page-staging/deployment-landing-prod.yaml"
-                 sh "kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.4/deploy/static/provider/aws/deploy.yaml"
-                 sh "kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission"
-                 sh "kubectl apply -f ./big-project/ingress-staging/ingress.yaml"
              }
          }
 
